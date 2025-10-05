@@ -1695,10 +1695,10 @@ const Game = () => {
             {renderGameContent()}
           </div>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-3 sm:gap-6 h-full">
+          <div className="grid lg:grid-cols-3 gap-3 sm:gap-6 h-full overflow-hidden">
             {/* Sidebar - Chapters List */}
-            <div className="lg:col-span-1">
-              <Card className="p-3 sm:p-4 shadow-soft h-full overflow-y-auto">
+            <div className="lg:col-span-1 flex flex-col min-h-0">
+              <Card className="p-3 sm:p-4 shadow-soft flex-1 overflow-y-auto">
                 <h3 className="font-semibold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2">
                   <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                   Chapitres

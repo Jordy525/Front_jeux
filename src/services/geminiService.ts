@@ -30,20 +30,36 @@ const GEMINI_CHALLENGES: { [key: string]: any[] } = {
   ]
 };
 
+// Configuration du nombre de questions par type
+const QUESTIONS_PER_TYPE: { [key: string]: number } = {
+  'quiz': 5,      // Minimum 5 questions pour quiz
+  'puzzle': 2,    // Minimum 2 questions pour énigmes
+  'simulation': 1,
+  'action': 1,
+  'analysis': 1,
+  'debate': 1,
+  'ar': 1,
+  'visual': 1,
+  'narrative': 1,
+  'final': 1
+};
+
 // Fonction pour simuler la génération Gemini
-const simulateGeminiGeneration = async (chapterName: string, levelNumber: number): Promise<string> => {
+const simulateGeminiGeneration = async (chapterName: string, levelNumber: number, levelType: string): Promise<string> => {
   await new Promise(resolve => setTimeout(resolve, 800)); // Simulation délai
   
+  const numQuestions = QUESTIONS_PER_TYPE[levelType] || 1;
   const challenges = GEMINI_CHALLENGES[chapterName] || [];
   const challenge = challenges[levelNumber - 1] || challenges[0] || {
     question: `Question ${chapterName} niveau ${levelNumber}`,
     options: ["Option A", "Option B", "Option C", "Option D"],
     correct: 0,
     hint: `Indice pour ${chapterName}`,
-    explanation: `Explication détaillée pour ${chapterName}`
+    explanation: `Explication détaillée pour ${chapterName}`,
+    numQuestions: numQuestions
   };
   
-  return JSON.stringify(challenge);
+  return JSON.stringify({ ...challenge, numQuestions });
 };
 
 export interface LevelChallenge {
@@ -78,7 +94,7 @@ export class GeminiService {
     
     try {
       // Utiliser la simulation Gemini
-      const text = await simulateGeminiGeneration(chapterInfo.name, levelNumber);
+      const text = await simulateGeminiGeneration(chapterInfo.name, levelNumber, levelType);
       return this.parseGeminiResponse(text);
     } catch (error) {
       console.error('Erreur Gemini:', error);
